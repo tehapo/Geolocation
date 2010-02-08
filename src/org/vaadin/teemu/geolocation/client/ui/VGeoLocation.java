@@ -67,6 +67,7 @@ public class VGeoLocation extends Widget implements Paintable {
     @SuppressWarnings("unused")
     private void locationCallback(double latitude, double longitude,
             double accuracy) {
+        client.updateVariable(paintableId, "accuracy", accuracy, false);
         client.updateVariable(paintableId, "latitude", latitude, false);
         client.updateVariable(paintableId, "longitude", longitude, immediate);
     }

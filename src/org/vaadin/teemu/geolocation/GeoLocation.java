@@ -44,9 +44,11 @@ public class GeoLocation extends AbstractComponent {
         super.changeVariables(source, variables);
 
         if (variables.containsKey("latitude")
-                && variables.containsKey("longitude")) {
+                && variables.containsKey("longitude")
+                && variables.containsKey("accuracy")) {
             fireEvent(new GeoLocationRecievedEvent((Double) variables
-                    .get("latitude"), (Double) variables.get("longitude")));
+                    .get("latitude"), (Double) variables.get("longitude"),
+                    (Double) variables.get("accuracy")));
         }
 
         if (variables.containsKey("errorCode")) {
@@ -93,10 +95,14 @@ public class GeoLocation extends AbstractComponent {
 
         private final double longitude;
 
-        public GeoLocationRecievedEvent(double latitude, double longitude) {
+        private final double accuracyInMeters;
+
+        public GeoLocationRecievedEvent(double latitude, double longitude,
+                double accuracy) {
             super(GeoLocation.this);
             this.latitude = latitude;
             this.longitude = longitude;
+            this.accuracyInMeters = accuracy;
         }
 
         public double getLatitude() {
@@ -105,6 +111,10 @@ public class GeoLocation extends AbstractComponent {
 
         public double getLongitude() {
             return longitude;
+        }
+
+        public double getAccuracyInMeters() {
+            return accuracyInMeters;
         }
     }
 

@@ -3,6 +3,7 @@ package org.vaadin.teemu.geolocation;
 import java.awt.geom.Point2D;
 
 import org.vaadin.hezamu.googlemapwidget.GoogleMap;
+import org.vaadin.hezamu.googlemapwidget.GoogleMap.MapControl;
 import org.vaadin.hezamu.googlemapwidget.overlay.BasicMarker;
 import org.vaadin.teemu.geolocation.GeoLocation.GeoLocationErrorEvent;
 import org.vaadin.teemu.geolocation.GeoLocation.GeoLocationRecievedEvent;
@@ -25,6 +26,9 @@ public class GeoLocationDemo extends Application implements
     private GeoLocation geoLocation;
     private Window mainWindow;
     private GoogleMap map;
+    private Button requestButton;
+
+    private final String REQUEST_BUTTON_CAPTION = "Show me on the map!";
 
     @Override
     public void init() {
@@ -43,7 +47,8 @@ public class GeoLocationDemo extends Application implements
         leftSide
                 .addComponent(new Label(
                         "<h1>GeoLocation demo</h1>"
-                                + "<p>Supports Firefox 3.5+</p>"
+                                + "<p>Supported browsers:</p>"
+                                + "<ul><li>Firefox 3.5+</li><li>Safari Mobile (iPhone 3GS)</li></ul>"
                                 + "<p>This demo application uses the <a href=\"http://vaadin.com/forum/-/message_boards/message/95530\">Google Maps Widget</a> by Henri Muurimaa.</p>",
                         Label.CONTENT_XHTML));
 
@@ -57,11 +62,13 @@ public class GeoLocationDemo extends Application implements
         layout.addComponent(longitude);
         leftSide.addComponent(layout);
 
-        Button b = new Button("Show me on the map!", this);
-        leftSide.addComponent(b);
+        requestButton = new Button(REQUEST_BUTTON_CAPTION, this);
+        leftSide.addComponent(requestButton);
 
-        map = new GoogleMap(this, new Point2D.Double(21.0, 55.0), 3);
+        map = new GoogleMap(this);
+        map.setZoom(2);
         map.setSizeFull();
+        map.addControl(MapControl.LargeMapControl);
         mainLayout.addComponent(map);
 
         mainLayout.setExpandRatio(map, 1f);
@@ -74,12 +81,20 @@ public class GeoLocationDemo extends Application implements
     }
 
     public void buttonClick(ClickEvent event) {
+        requestButton.setEnabled(false);
+        requestButton.setCaption("Just a second...");
         geoLocation.requestGeoLocation();
+    }
+
+    private void enableRequestButton() {
+        requestButton.setEnabled(true);
+        requestButton.setCaption(REQUEST_BUTTON_CAPTION);
     }
 
     public void geoLocationRecieved(GeoLocationRecievedEvent event) {
         mainWindow.showNotification(event.getLatitude() + ", "
-                + event.getLongitude());
+                + event.getLongitude() + ", accuracy in meters "
+                + event.getAccuracyInMeters());
         latitude.setValue(event.getLatitude());
         longitude.setValue(event.getLongitude());
 
@@ -88,10 +103,12 @@ public class GeoLocationDemo extends Application implements
         map.setCenter(point);
         map.addMarker(new BasicMarker(1L, point, "Your current location"));
         map.setZoom(14);
+        enableRequestButton();
     }
 
     public void geoLocationUnsupported(GeoLocationUnsupportedEvent event) {
         mainWindow.showNotification("GeoLocation unsupported by the terminal.");
+        enableRequestButton();
     }
 
     public void geoLocationError(GeoLocationErrorEvent event) {
@@ -100,6 +117,7 @@ public class GeoLocationDemo extends Application implements
             message = "Come out, come out where ever you are!";
         }
         mainWindow.showNotification(message);
+        enableRequestButton();
     }
 
 }
