@@ -1,25 +1,30 @@
 package org.vaadin.teemu.geolocation;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 
 /**
- * TODO - javadoc Server-side component for the VGeoLocation widget.
- */
-
-/*- Related links:
+ * GeoLocation provides the Vaadin application a service for requesting
+ * geographical location of the terminal (browser).
+ * 
+ * Live demo:
  * 
  * http://teemu.virtuallypreinstalled.com/GeoLocation
  * 
+ * Related links:
+ * 
  * https://developer.mozilla.org/En/Using_geolocation
- * https://developer.mozilla.org/en/XPCOM_Interface_Reference/NsIDOMGeoPositionCoords
  * http://smithsrus.com/gps-geolocation-in-safari-on-iphone-os-3-0/
+ * http://dev.w3.org/geo/api/spec-source.html
  */
-@com.vaadin.ui.ClientWidget(org.vaadin.teemu.geolocation.client.ui.VGeoLocation.class)
+@ClientWidget(org.vaadin.teemu.geolocation.client.ui.VGeoLocation.class)
+@SuppressWarnings("serial")
 public class GeoLocation extends AbstractComponent {
 
     private boolean locationRequested;
@@ -76,8 +81,11 @@ public class GeoLocation extends AbstractComponent {
     }
 
     /**
-     * TODO javadoc
+     * GeoLocationUnsupportedEvent is triggered when the terminal (browser)
+     * doesn't support the GeoLocation API.
      * 
+     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public class GeoLocationUnsupportedEvent extends Component.Event {
         public GeoLocationUnsupportedEvent() {
@@ -86,8 +94,11 @@ public class GeoLocation extends AbstractComponent {
     }
 
     /**
-     * TODO javadoc
+     * GeoLocationRecievedEvent is triggered when the location request is
+     * completed successfully.
      * 
+     * @see GeoLocation.GeoLocationErrorEvent
+     * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public class GeoLocationRecievedEvent extends Component.Event {
 
@@ -119,8 +130,11 @@ public class GeoLocation extends AbstractComponent {
     }
 
     /**
-     * TODO javadoc
+     * GeoLocationErrorEvent is triggered in case of an error during the
+     * location request.
      * 
+     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public class GeoLocationErrorEvent extends Component.Event {
 
@@ -137,10 +151,14 @@ public class GeoLocation extends AbstractComponent {
     }
 
     /**
-     * TODO javadoc
+     * GeoLocationListener recieves all events triggered by the location
+     * requests.
      * 
+     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationErrorEvent
+     * @see GeoLocation.GeoLocationUnsupportedEvent
      */
-    public interface GeoLocationListener {
+    public interface GeoLocationListener extends Serializable {
         public void geoLocationRecieved(GeoLocationRecievedEvent event);
 
         public void geoLocationError(GeoLocationErrorEvent event);
