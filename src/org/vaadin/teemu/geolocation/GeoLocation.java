@@ -51,15 +51,16 @@ public class GeoLocation extends AbstractComponent {
         if (variables.containsKey("latitude")
                 && variables.containsKey("longitude")
                 && variables.containsKey("accuracy")) {
-            fireEvent(new GeoLocationRecievedEvent((Double) variables
-                    .get("latitude"), (Double) variables.get("longitude"),
+            fireEvent(new GeoLocationReceivedEvent(
+                    (Double) variables.get("latitude"),
+                    (Double) variables.get("longitude"),
                     (Double) variables.get("accuracy")));
         }
 
         if (variables.containsKey("errorCode")) {
-            fireEvent(new GeoLocationErrorEvent(GeoLocationError
-                    .getErrorForCode(Integer.valueOf(variables.get("errorCode")
-                            .toString()))));
+            fireEvent(new GeoLocationErrorEvent(
+                    GeoLocationError.getErrorForCode(Integer.valueOf(variables
+                            .get("errorCode").toString()))));
         }
 
         if (variables.containsKey("unsupported")) {
@@ -68,8 +69,8 @@ public class GeoLocation extends AbstractComponent {
     }
 
     public void addListener(GeoLocationListener listener) {
-        addListener(GeoLocationRecievedEvent.class, listener,
-                "geoLocationRecieved");
+        addListener(GeoLocationReceivedEvent.class, listener,
+                "geoLocationReceived");
         addListener(GeoLocationUnsupportedEvent.class, listener,
                 "geoLocationUnsupported");
         addListener(GeoLocationErrorEvent.class, listener, "geoLocationError");
@@ -84,7 +85,7 @@ public class GeoLocation extends AbstractComponent {
      * GeoLocationUnsupportedEvent is triggered when the terminal (browser)
      * doesn't support the GeoLocation API.
      * 
-     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationReceivedEvent
      * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public class GeoLocationUnsupportedEvent extends Component.Event {
@@ -94,13 +95,13 @@ public class GeoLocation extends AbstractComponent {
     }
 
     /**
-     * GeoLocationRecievedEvent is triggered when the location request is
+     * GeoLocationReceivedEvent is triggered when the location request is
      * completed successfully.
      * 
      * @see GeoLocation.GeoLocationErrorEvent
      * @see GeoLocation.GeoLocationUnsupportedEvent
      */
-    public class GeoLocationRecievedEvent extends Component.Event {
+    public class GeoLocationReceivedEvent extends Component.Event {
 
         private final double latitude;
 
@@ -108,7 +109,7 @@ public class GeoLocation extends AbstractComponent {
 
         private final double accuracyInMeters;
 
-        public GeoLocationRecievedEvent(double latitude, double longitude,
+        public GeoLocationReceivedEvent(double latitude, double longitude,
                 double accuracy) {
             super(GeoLocation.this);
             this.latitude = latitude;
@@ -133,7 +134,7 @@ public class GeoLocation extends AbstractComponent {
      * GeoLocationErrorEvent is triggered in case of an error during the
      * location request.
      * 
-     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationReceivedEvent
      * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public class GeoLocationErrorEvent extends Component.Event {
@@ -154,12 +155,12 @@ public class GeoLocation extends AbstractComponent {
      * GeoLocationListener recieves all events triggered by the location
      * requests.
      * 
-     * @see GeoLocation.GeoLocationRecievedEvent
+     * @see GeoLocation.GeoLocationReceivedEvent
      * @see GeoLocation.GeoLocationErrorEvent
      * @see GeoLocation.GeoLocationUnsupportedEvent
      */
     public interface GeoLocationListener extends Serializable {
-        public void geoLocationRecieved(GeoLocationRecievedEvent event);
+        public void geoLocationReceived(GeoLocationReceivedEvent event);
 
         public void geoLocationError(GeoLocationErrorEvent event);
 
