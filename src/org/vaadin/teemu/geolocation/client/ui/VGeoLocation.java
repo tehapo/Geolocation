@@ -64,7 +64,6 @@ public class VGeoLocation extends Widget implements Paintable {
         }
     }
 
-    @SuppressWarnings("unused")
     private void locationCallback(double latitude, double longitude,
             double accuracy) {
         client.updateVariable(paintableId, "accuracy", accuracy, false);
@@ -72,7 +71,6 @@ public class VGeoLocation extends Widget implements Paintable {
         client.updateVariable(paintableId, "longitude", longitude, immediate);
     }
 
-    @SuppressWarnings("unused")
     private void errorCallback(int errorCode) {
         client.updateVariable(paintableId, "errorCode", errorCode, immediate);
     }
